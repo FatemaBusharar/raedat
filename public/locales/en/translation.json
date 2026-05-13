@@ -1,0 +1,253 @@
+{
+  "nav": {
+    "home": "Home",
+    "about": "About",
+    "activities": "Activities",
+    "community": "Community",
+    "contact": "Contact Us",
+    "newsletter": "Newsletter",
+    "partners": "Partners",
+    "adminMessages": "Messages",
+    "createAdmin": "Create Admin",
+    "updatePassword": "Update Password",
+    "logout": "Logout"
+  },
+  "signin": {
+    "heroTitle": "Ra'edat Admin",
+    "heroTagline": "Access the central management hub",
+    "authorizedNotice": "Authorized Personnel Only • Secure Dashboard Access",
+    "welcomeTitle": "Welcome Back",
+    "description": "Please enter your administrative credentials to manage community content and oversee the Ra'edat ecosystem.",
+    "formTitle": "Sign In",
+    "emailLabel": "Email Address",
+    "passwordLabel": "Password",
+    "emailPlaceholder": "admin@raedat.online",
+    "passwordPlaceholder": "••••••••",
+    "submitButton": "Access Dashboard",
+    "errorDefault": "Login failed. Please try again."
+  },
+  "adminForm": {
+    "title": "Create New Admin",
+    "placeholders": {
+      "name": "Full Name",
+      "email": "Email",
+      "password": "Password",
+      "confirmPassword": "Confirm Password"
+    },
+    "buttons": {
+      "showPassword": "Show Password",
+      "hidePassword": "Hide Password",
+      "submit": "Create Admin",
+      "loading": "Creating..."
+    },
+    "messages": {
+      "fillAllFields": "Please fill all fields",
+      "passwordMismatch": "Passwords do not match",
+      "loginRequired": "You must login first",
+      "success": "Admin created successfully",
+      "serverError": "Server error while creating admin"
+    }
+  },
+  "updatePassword": {
+    "heroTitle": "Account Security",
+    "heroSubtitle": "Manage your digital credentials",
+    "heroImageAlt": "Professional Cybersecurity",
+
+    "introBar": "Safeguard your presence online with professional encryption",
+
+    "headingLine1": "Update Your",
+    "headingLine2": "Access Password",
+
+    "description": "Your security is our priority. Please use the secure form to update your authentication details. We recommend a password length of at least 12 characters.",
+
+    "currentPassword": "Current Password",
+    "currentPasswordPlaceholder": "Enter current password",
+
+    "newPassword": "New Password",
+    "newPasswordPlaceholder": "Enter new password",
+
+    "confirmPassword": "Confirm Password",
+    "confirmPasswordPlaceholder": "Verify new password",
+
+    "submitButton": "Update Security Credentials",
+
+    "sessionExpired": "Session expired. Please login again.",
+    "passwordMismatch": "New passwords do not match!",
+    "success": "Password successfully updated!",
+    "failed": "Failed to update password."
+  },
+  "adminMessages": {
+    "title": "Contact Messages",
+    "read": "Read",
+    "name": "Name",
+    "email": "Email",
+    "phone": "Phone",
+    "subject": "Subject",
+    "message": "Message",
+    "action": "Action",
+    "delete": "Delete",
+    "empty": "No messages found",
+    "confirmDelete": "Are you sure you want to delete this message?"
+  },
+  "about": {
+    "hero_label": "Say Hello to",
+    "hero_title": "ra’edat",
+    "hero_text": "ra'edat is a pioneering platform dedicated to unleashing the transformative potential of Arab women within the orange economy.",
+
+    "admin_title": "ABOUT ADMIN",
+    "new_section": "New Section",
+
+    "title": "Title",
+    "desc": "Description",
+    "image_url": "Image URL",
+
+    "cancel": "Cancel",
+    "save": "Save",
+
+    "loading": "Loading...",
+
+    "confirm": "Are you sure?",
+
+    "vision_title": "Vision",
+    "vision_text": "To ignite the creative potential of Arab women in the orange economy, fostering a vibrant community of innovative thinkers and changemakers who inspire social progress and economic development.",
+
+    "mission_title": "Mission",
+    "mission_text": "To empower Arab women by providing tools, mentorship, and opportunities to thrive in the orange economy.",
+
+    "features": {
+      "post_content": "Create posts, articles, polls, events, and courses.",
+      "groups": "Build community groups and sub-groups for organisations.",
+      "marketplace": "Support for creating a branded e-marketplace.",
+      "mobile_app": "Native app available for Android and iOS devices.",
+      "customizable": "Customisable experiences for community members.",
+      "tech": "Enjoyable and straightforward technological experience.",
+      "gamification": "Enhance gamification features to boost engagement."
+    }
+  },
+
+  "home": {
+    "title_unlock": "Unlock your potential with",
+    "raedat": "ra'edat",
+    "Join": "Join ra’edat",
+    "title_hello": "Say Hello to ra’edat",
+    "desc_initiative": "ra'edat is an innovative initiative dedicated to fostering collaborations among members and organisations, empowering them to achieve shared goals and build meaningful partnerships within the creative economy, more specifically, the orange economy.",
+    "btn_read_more": "Read More",
+    "title_community": "A Creative Community",
+    "title_benefits": "Member Benefits",
+    "title_jobs": "Job and Business Opportunites"
+  },
+  "community": {
+    "title": "A Creative Community",
+    "description": "The platform will harness women's potential by integrating the orange economy into our pillars, with an approach to tailoring content and operations to empower Arab women while fostering economic growth.",
+
+    "pillars_title": "Platform Pillars Include:",
+
+    "pillars_heading_start": "What We",
+    "pillars_heading_highlight": "Offer",
+    "pillars_sub": "Five integrated pillars designed to empower Arab women through the orange creative economy in ra'edat.",
+
+    "pillars": {
+      "live_streaming": "Live Streaming",
+      "events_management": "Events Management",
+      "online_courses": "Customisable Online Courses",
+      "souq": "Souq ra'edat (promoting orange economy products)",
+      "community_support": "Building and nurturing community support"
+    },
+
+    "values_title": "Our Values",
+
+    "individuals_heading_start": "For You,",
+    "individuals_heading_highlight": "Inspiring Woman",
+    "individuals_sub": "This platform is dedicated to every ambitious and creative woman who never stops growing.",
+
+    "individuals": {
+      "personal_growth_title": "Personal Growth",
+      "personal_growth_text": "Access to tailored educational resources, workshops, and expert mentorship enhances skills critical for success in the creative economy.",
+
+      "networking_title": "Networking Opportunities",
+      "networking_text": "Connect with like-minded women and industry leaders to share experiences and collaborate on projects.",
+
+      "creative_expression_title": "Creative Expression",
+      "creative_expression_text": "Engage in a community that celebrates and promotes unique talents through various initiatives, including the souq ra'edat marketplace."
+    },
+
+    "communities_title": "For Communities:",
+
+    "communities": {
+      "empowerment_title": "Empowerment",
+      "empowerment_text": "By investing in women's entrepreneurship, ra'edat strengthens local economies and fosters innovation across the creative sector.",
+
+      "heritage_title": "Cultural Heritage",
+      "heritage_text": "The platform promotes cultural pride and sustainable economic growth by highlighting the achievements and contributions of women within their communities.",
+
+      "growth_title": "Collective Growth",
+      "growth_text": "Workshops, panel discussions, and events cultivate a collaborative spirit and encourage knowledge exchange among members."
+    },
+
+    "users_title": "ra'edat caters to a wide range of users, including:",
+
+    "users_heading_start": "A Home For Every",
+    "users_heading_highlight": "Woman",
+    "users_heading_end": "Creating Opportunities",
+    "users_sub": "Whether you're building a business or sharing an idea — ra'edat is your perfect place.",
+
+    "users": {
+      "businesses": "Businesses",
+      "educators": "Educators",
+      "coaches": "Coaches/Mentors",
+      "creators": "Creators",
+      "startups": "Startups",
+      "entrepreneurs": "Entrepreneurs",
+      "solopreneurs": "Solopreneurs",
+      "nonprofits": "Non-profit Organizations"
+    }
+  },
+  "partners": {
+    "heroTitle": "Our Partners",
+    "heroSubtitle": "Collaborating with visionaries to create impact",
+
+    "media_preTitle": "Global Reach",
+    "media_title": "Media Partners",
+
+    "strategic_preTitle": "Core Strength",
+    "strategic_title": "Strategic Partners",
+
+    "sponsors_preTitle": "Supporters",
+    "sponsors_title": "Sponsors",
+
+    "footerText": "Building a creative future together",
+
+    "moms_alt": "360 Moms",
+    "albilad_alt": "Al Bilad Press",
+    "alroya_alt": "Al Roya",
+
+    "kaaf_alt": "Kaaf",
+    "unido_alt": "UNIDO",
+    "thinksmart_alt": "Think Smart",
+    "alrawi_alt": "Al Rawi Books",
+    "kipina_alt": "Kipina Kids",
+    "fywedo_alt": "Fywedo",
+    "bahwu_alt": "Bahwu",
+    "goldenTrust_alt": "Golden Trust",
+
+    "gfh_alt": "GFH",
+    "benefit_alt": "Benefit"
+  },
+  "contact": {
+    "company": "Raedat W.L.L Company",
+    "address": "Al Badi' Building, Road 711, Block 207, Building 453, Apartment 22, P.O. Box 3294, Muharraq, Bahrain",
+    "email": "Email: support@raedat.online",
+    "address_label": "Address",
+    "email_label": "Email",
+    "reach_out": "Get in touch with us",
+    "form_title": "We’re happy to hear from you",
+    "form_desc": "Fill out the form and we’ll get back to you as soon as possible.",
+    "full_name": "Enter your full name",
+    "email_placeholder": "Enter your email address",
+    "phone": "Phone number",
+    "subject": "Subject",
+    "message": "Enter your message",
+    "submit": "Send",
+    "success": "Your message has been sent successfully. We will contact you soon."
+  }
+}
