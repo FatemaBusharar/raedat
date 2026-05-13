@@ -5,16 +5,33 @@ import { motion, AnimatePresence } from "framer-motion"
 import axios from "axios"
 import "./Home.css"
 
+// --- DND KIT IMPORTS ---
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core"
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  verticalListSortingStrategy,
+  useSortable,
+} from "@dnd-kit/sortable"
+import { CSS } from "@dnd-kit/utilities"
+
 const Home = ({ user }) => {
   const navigate = useNavigate()
   const { t, i18n } = useTranslation()
-
   const isAr = i18n.language === "ar"
+  const token = localStorage.getItem("token")
 
   const [sections, setSections] = useState([])
   const [loading, setLoading] = useState(true)
   const [showLayoutPicker, setShowLayoutPicker] = useState(false)
-
   const [popup, setPopup] = useState({
     isOpen: false,
     message: "",
@@ -22,13 +39,16 @@ const Home = ({ user }) => {
     onConfirm: null,
   })
 
-  const token = localStorage.getItem("token")
+  // --- DND SENSORS ---
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
+  )
 
   useEffect(() => {
     const getHomeContent = async () => {
       try {
         const res = await axios.get("http://localhost:3000/content/page/home")
-
         setSections(res.data)
       } catch (err) {
         console.error("Error fetching content", err)
@@ -36,34 +56,40 @@ const Home = ({ user }) => {
         setLoading(false)
       }
     }
-
     getHomeContent()
   }, [])
 
-  const showAlert = (message) => {
-    setPopup({
-      isOpen: true,
-      message,
-      type: "alert",
-    })
+  // --- DRAG & DROP HANDLER ---
+  const handleDragEnd = async (event) => {
+    const { active, over } = event
+    if (active.id !== over.id) {
+      const oldIndex = sections.findIndex((s) => s._id === active.id)
+      const newIndex = sections.findIndex((s) => s._id === over.id)
+
+      const reordered = arrayMove(sections, oldIndex, newIndex)
+      setSections(reordered)
+
+      try {
+        await axios.put(
+          "http://localhost:3000/content/reorder",
+          { sections: reordered },
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        )
+      } catch (err) {
+        console.error("Failed to sync new order", err)
+      }
+    }
   }
 
+  // --- ADMIN ACTIONS ---
   const showConfirm = (message, onConfirm) => {
-    setPopup({
-      isOpen: true,
-      message,
-      type: "confirm",
-      onConfirm,
-    })
+    setPopup({ isOpen: true, message, type: "confirm", onConfirm })
   }
 
   const closePopup = () => {
-    setPopup({
-      isOpen: false,
-      message: "",
-      type: "alert",
-      onConfirm: null,
-    })
+    setPopup({ isOpen: false, message: "", type: "alert", onConfirm: null })
   }
 
   const addNewSection = async (layoutType) => {
@@ -71,7 +97,7 @@ const Home = ({ user }) => {
       const newBlock = {
         page: "home",
         layoutType,
-        header: layoutType === "standard" ? "New ra'edat Section" : "",
+        header: layoutType === "standard" ? "New Section" : "New Collection",
         text: layoutType === "standard" ? "Standard layout description." : "",
         image:
           "https://www.raedat.online/MediaManager/Media/home/Home-sayHello.jpg",
@@ -80,24 +106,21 @@ const Home = ({ user }) => {
             ? [
                 {
                   image: "https://placehold.co/800x600",
-                  title: "Premium Feature",
-                  desc: "Showcase your best tools here.",
+                  title: "Feature One",
+                  desc: "Detail one.",
                 },
                 {
                   image: "https://placehold.co/800x600",
-                  title: "Dynamic Layout",
-                  desc: "Adapts perfectly to any screen.",
+                  title: "Feature Two",
+                  desc: "Detail two.",
                 },
               ]
             : [],
       }
 
       const res = await axios.post("http://localhost:3000/content", newBlock, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { Authorization: `Bearer ${token}` },
       })
-
       setSections((prev) => [...prev, res.data])
       setShowLayoutPicker(false)
     } catch (error) {
@@ -109,16 +132,12 @@ const Home = ({ user }) => {
     showConfirm(isAr ? "حذف هذا القسم؟" : "Delete this section?", async () => {
       try {
         await axios.delete(`http://localhost:3000/content/${id}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          headers: { Authorization: `Bearer ${token}` },
         })
-
         setSections(sections.filter((s) => s._id !== id))
       } catch (err) {
         console.error("Delete failed", err)
       }
-
       closePopup()
     })
   }
@@ -127,6 +146,7 @@ const Home = ({ user }) => {
 
   return (
     <div className={`home-page ${isAr ? "rtl-theme" : ""}`}>
+      {/* 1. POPUP SYSTEM */}
       <AnimatePresence>
         {popup.isOpen && (
           <motion.div
@@ -137,14 +157,12 @@ const Home = ({ user }) => {
           >
             <motion.div
               className="custom-popup-box"
-              initial={{ scale: 0.95, y: 20, opacity: 0 }}
-              animate={{ scale: 1, y: 0, opacity: 1 }}
-              exit={{ scale: 0.95, y: 20, opacity: 0 }}
+              initial={{ scale: 0.95, y: 20 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.95, y: 20 }}
             >
               <h3>{isAr ? "تنبيه" : "Notice"}</h3>
-
               <p>{popup.message}</p>
-
               <div className="popup-actions">
                 {popup.type === "confirm" ? (
                   <>
@@ -154,7 +172,6 @@ const Home = ({ user }) => {
                     >
                       {isAr ? "إلغاء" : "Cancel"}
                     </button>
-
                     <button
                       className="popup-btn popup-confirm"
                       onClick={popup.onConfirm}
@@ -173,13 +190,12 @@ const Home = ({ user }) => {
         )}
       </AnimatePresence>
 
+      {/* 2. ADMIN BAR */}
       {user?.admin && (
         <div className="admin-add-bar">
           <div className="admin-status">
-            <span className="dot"></span>
-            {isAr ? "لوحة التحكم" : "ADMIN"}
+            <span className="dot"></span> {isAr ? "لوحة التحكم" : "ADMIN"}
           </div>
-
           {!showLayoutPicker ? (
             <button
               className="add-btn"
@@ -192,15 +208,12 @@ const Home = ({ user }) => {
               <button onClick={() => addNewSection("standard")}>
                 Standard
               </button>
-
               <button onClick={() => addNewSection("grid-text")}>
-                Image + Text
+                Grid (Text)
               </button>
-
               <button onClick={() => addNewSection("grid-header")}>
-                Image + Header
+                Grid (Header)
               </button>
-
               <button
                 className="popup-cancel"
                 onClick={() => setShowLayoutPicker(false)}
@@ -212,7 +225,7 @@ const Home = ({ user }) => {
         </div>
       )}
 
-      {/* HERO SECTION */}
+      {/* 3. STATIC HERO SECTION */}
       <section className="hero-section">
         <div className="hero-wrapper">
           <motion.div
@@ -224,14 +237,11 @@ const Home = ({ user }) => {
             <h1>
               {t("home.title_unlock")} <span>{t("home.raedat")}</span>
             </h1>
-
             <p className="hero-desc">{t("home.desc_initiative")}</p>
-
             <div className="hero-buttons">
               <Link to="/community" className="join-btn">
                 {t("home.Join")}
               </Link>
-
               <button
                 className="read-more-btn"
                 onClick={() => navigate("/about")}
@@ -239,7 +249,6 @@ const Home = ({ user }) => {
                 {isAr ? "تعرفي علينا" : "Learn More"}
               </button>
             </div>
-
             <div className="store-links">
               <a
                 href="https://apps.apple.com/us/app/raedat/id6742032306"
@@ -252,7 +261,6 @@ const Home = ({ user }) => {
                   alt="App Store"
                 />
               </a>
-
               <a
                 href="https://play.google.com/store/apps/details?id=online.raedat.app"
                 target="_blank"
@@ -266,7 +274,6 @@ const Home = ({ user }) => {
               </a>
             </div>
           </motion.div>
-
           <motion.div
             className="hero-image"
             initial={{ opacity: 0, x: isAr ? -50 : 50 }}
@@ -284,7 +291,7 @@ const Home = ({ user }) => {
         </div>
       </section>
 
-      {/* HELLO SECTION */}
+      {/* 4. STATIC HELLO SECTION */}
       <section className="hello-section">
         <div className="hello-wrapper">
           <motion.div
@@ -295,14 +302,11 @@ const Home = ({ user }) => {
             viewport={{ once: true }}
           >
             <h2>{t("home.title_hello")}</h2>
-
             <p>{t("home.desc_initiative")}</p>
-
             <Link to="/about" className="read-more-btn">
               {t("home.btn_read_more")}
             </Link>
           </motion.div>
-
           <motion.div
             className="hello-image"
             initial={{ opacity: 0, y: 40 }}
@@ -319,93 +323,127 @@ const Home = ({ user }) => {
         </div>
       </section>
 
-      {/* DYNAMIC SECTIONS */}
-      {sections.map((section, index) => (
-        <motion.section
-          key={section._id}
-          className={`about-section-custom section-layout-${
-            section.layoutType || "standard"
-          }`}
-          initial={{ opacity: 0, y: 50 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7 }}
-          viewport={{ once: true }}
-          style={{
-            backgroundColor: index % 2 === 0 ? "#ffffff" : "#f5f5f7",
-          }}
+      {/* 5. DYNAMIC DRAGGABLE SECTIONS */}
+      <DndContext
+        sensors={sensors}
+        collisionDetection={closestCenter}
+        onDragEnd={handleDragEnd}
+      >
+        <SortableContext
+          items={sections.map((s) => s._id)}
+          strategy={verticalListSortingStrategy}
         >
-          {!section.layoutType || section.layoutType === "standard" ? (
-            <div
-              className="standard-flex"
-              style={{
-                flexDirection: index % 2 !== 0 ? "row-reverse" : "row",
-              }}
-            >
-              <div className="about-text-content">
-                <h2 className="section-title-alt">{section.header}</h2>
-
-                <p className="description-p">{section.text}</p>
-
-                {user?.admin && (
-                  <AdminActions
-                    id={section._id}
-                    onDelete={deleteSection}
-                    navigate={navigate}
-                  />
-                )}
-              </div>
-
-              <div className="about-image-content">
-                <img src={section.image} className="about-main-img" alt="" />
-              </div>
-            </div>
-          ) : (
-            <div className="grid-layout-container">
-              <h2 className="section-title-alt center-title">
-                {section.header}
-              </h2>
-
-              <div className="custom-grid">
-                {section.items?.map((item, i) => (
-                  <div key={i} className="grid-item">
-                    <img src={item.image} alt="" />
-
-                    {section.layoutType === "grid-header" ? (
-                      <h3>{item.title}</h3>
-                    ) : (
-                      <p>{item.desc}</p>
-                    )}
-                  </div>
-                ))}
-              </div>
-
-              {user?.admin && (
-                <div className="center-actions">
-                  <AdminActions
-                    id={section._id}
-                    onDelete={deleteSection}
-                    navigate={navigate}
-                  />
-                </div>
-              )}
-            </div>
-          )}
-        </motion.section>
-      ))}
+          {sections.map((section, index) => (
+            <SortableSection
+              key={section._id}
+              section={section}
+              index={index}
+              user={user}
+              onDelete={deleteSection}
+              navigate={navigate}
+            />
+          ))}
+        </SortableContext>
+      </DndContext>
     </div>
   )
 }
 
-const AdminActions = ({ id, onDelete, navigate }) => {
-  return (
-    <div className="admin-actions">
-      <button className="edit-btn" onClick={() => navigate(`/edit/${id}`)}>
-        Edit
-      </button>
+// --- SORTABLE SECTION SUB-COMPONENT ---
+const SortableSection = ({ section, index, user, onDelete, navigate }) => {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: section._id })
 
-      <button className="btn-delete" onClick={() => onDelete(id)}>
-        Delete
-      </button>
+  const dndStyle = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    zIndex: isDragging ? 100 : 1,
+    opacity: isDragging ? 0.4 : 1,
+    backgroundColor: index % 2 === 0 ? "#ffffff" : "#f5f5f7",
+  }
+
+  return (
+    <div ref={setNodeRef} style={dndStyle} className="sortable-row">
+      <section
+        className={`about-section-custom section-layout-${section.layoutType || "standard"}`}
+      >
+        {/* DRAG HANDLE FOR ADMINS */}
+        {user?.admin && (
+          <div className="drag-handle-bar" {...attributes} {...listeners}>
+            <div className="handle-pill">⠿ DRAG TO REORDER SECTION</div>
+          </div>
+        )}
+
+        {/* CONTENT RENDERING */}
+        {!section.layoutType || section.layoutType === "standard" ? (
+          <div
+            className="standard-flex"
+            style={{ flexDirection: index % 2 !== 0 ? "row-reverse" : "row" }}
+          >
+            <div className="about-text-content">
+              <h2 className="section-title-alt">{section.header}</h2>
+              <p className="description-p">{section.text}</p>
+              {user?.admin && (
+                <div className="admin-actions">
+                  <button
+                    className="edit-btn"
+                    onClick={() => navigate(`/edit/${section._id}`)}
+                  >
+                    Edit
+                  </button>
+                  <button
+                    className="btn-delete"
+                    onClick={() => onDelete(section._id)}
+                  >
+                    Delete
+                  </button>
+                </div>
+              )}
+            </div>
+            <div className="about-image-content">
+              <img src={section.image} className="about-main-img" alt="" />
+            </div>
+          </div>
+        ) : (
+          <div className="grid-layout-container">
+            <h2 className="section-title-alt center-title">{section.header}</h2>
+            <div className="custom-grid">
+              {section.items?.map((item, i) => (
+                <div key={i} className="grid-item">
+                  <img src={item.image} alt="" />
+                  {section.layoutType === "grid-header" ? (
+                    <h3>{item.title}</h3>
+                  ) : (
+                    <p>{item.desc}</p>
+                  )}
+                </div>
+              ))}
+            </div>
+            {user?.admin && (
+              <div className="center-actions">
+                <button
+                  className="edit-btn"
+                  onClick={() => navigate(`/edit/${section._id}`)}
+                >
+                  Edit
+                </button>
+                <button
+                  className="btn-delete"
+                  onClick={() => onDelete(section._id)}
+                >
+                  Delete
+                </button>
+              </div>
+            )}
+          </div>
+        )}
+      </section>
     </div>
   )
 }

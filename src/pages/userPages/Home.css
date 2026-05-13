@@ -611,6 +611,200 @@
   justify-content: flex-start;
 }
 
+/* ─── Reordering Controls ────────────────────── */
+
+.reorder-btns {
+  display: flex;
+  gap: 8px;
+  padding: 4px;
+  background: rgba(142, 125, 190, 0.08); /* Subtle lavender tint */
+  border-radius: 4px;
+  margin-right: 15px;
+}
+
+/* Ensure RTL support for margins */
+.rtl-theme .reorder-btns {
+  margin-right: 0;
+  margin-left: 15px;
+}
+
+.move-btn {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #fff;
+  color: #4b2c5e;
+  border: 1px solid #8e7dbe;
+  font-size: 1.2rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.move-btn:hover:not(:disabled) {
+  background-color: #ff7b00; /* Orange highlight on hover */
+  border-color: #ff7b00;
+  color: #fff;
+  transform: translateY(-3px);
+  box-shadow: 0 4px 12px rgba(255, 123, 0, 0.25);
+}
+
+.move-btn:disabled {
+  opacity: 0.2;
+  cursor: not-allowed;
+  border-color: #dcd0e8;
+  color: #c9bce0;
+}
+
+.move-btn:active:not(:disabled) {
+  transform: scale(0.9);
+}
+
+/* ─── Motion & Hover Effects ────────────────── */
+
+/* Floating animation for the Phone in Hero */
+.phone-frame {
+  animation: floatPhone 6s ease-in-out infinite;
+}
+
+@keyframes floatPhone {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-20px) rotate(2deg);
+  }
+}
+
+/* Image Hover: Shift the decorative shadow */
+.home-img,
+.about-main-img {
+  transition: all 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.hello-image:hover .home-img,
+.about-image-content:hover .about-main-img {
+  transform: translate(-10px, -10px);
+  box-shadow: 25px 25px 0px #ff7b00; /* Shadow turns orange on hover */
+}
+
+/* Subtle reveal for Admin Actions */
+.admin-actions {
+  opacity: 0;
+  transform: translateY(10px);
+  animation: slideInActions 0.5s forwards 0.3s;
+}
+
+@keyframes slideInActions {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Transition for reordering divs */
+.about-section-custom {
+  transition:
+    background-color 0.6s ease,
+    transform 0.4s ease;
+}
+
+/* Highlight section slightly when admin is editing/moving */
+.admin-add-bar + .home-page .about-section-custom:hover {
+  border-left: 4px solid #ff7b00;
+}
+
+/* ─── Admin Bar Polish ──────────────────────── */
+
+.layout-options {
+  animation: fadeInDown 0.4s ease-out;
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.layout-options button {
+  position: relative;
+  overflow: hidden;
+}
+
+.layout-options button::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.1);
+  transition: width 0.3s ease;
+}
+
+.layout-options button:hover::after {
+  width: 100%;
+}
+
+/* --- DRAG & DROP UI --- */
+
+.sortable-item-wrapper {
+  position: relative;
+  transition: box-shadow 0.3s ease;
+}
+
+/* When the item is being dragged, add a glow */
+.sortable-item-wrapper[style*="opacity: 0.6"] {
+  box-shadow: 0 20px 50px rgba(77, 37, 164, 0.2);
+  border: 2px dashed #ff7b00;
+  cursor: grabbing;
+}
+
+.drag-handle-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 10px 0;
+  cursor: grab;
+  margin-bottom: 20px;
+}
+
+.drag-handle-pill {
+  background: #4b2c5e;
+  color: #fff;
+  font-family: "Montserrat", sans-serif;
+  font-size: 0.65rem;
+  letter-spacing: 2px;
+  padding: 6px 16px;
+  border-radius: 50px;
+  border: 1px solid #8e7dbe;
+  transition: 0.3s;
+}
+
+.drag-handle-container:hover .drag-handle-pill {
+  background: #ff7b00;
+  border-color: #ff7b00;
+  transform: scale(1.05);
+}
+
+.drag-handle-container:active {
+  cursor: grabbing;
+}
+
+/* --- ANIMATION --- */
+/* This makes other sections slide out of the way smoothly */
+.sortable-item-wrapper {
+  touch-action: none; /* Required for mobile drag */
+}
+
 /* ─── Responsive ─────────────────────────────── */
 
 @media (max-width: 960px) {
