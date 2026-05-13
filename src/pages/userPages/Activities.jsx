@@ -14,9 +14,18 @@ const Activities = ({ user }) => {
 
   const [activities, setActivities] = useState([])
   const [loading, setLoading] = useState(true)
-  const [showModal, setShowModal] = useState(false)
+  const [showModal, setShowModal] = useState(false) // مودال الإضافة والتعديل
   const [editingId, setEditingId] = useState(null)
   const [editLang, setEditLang] = useState("en")
+  const [message, setMessage] = useState({ text: "", type: "" })
+
+  // حالة البوب أب المخصص للتأكيد (نفس نظام الهوم)
+  const [popup, setPopup] = useState({
+    isOpen: false,
+    message: "",
+    type: "alert",
+    onConfirm: null,
+  })
 
   const [formData, setFormData] = useState({
     header: "",
@@ -25,11 +34,6 @@ const Activities = ({ user }) => {
     textAr: "",
     image: "",
   })
-
-  const resetForm = () => {
-    setFormData({ header: "", headerAr: "", text: "", textAr: "", image: "" })
-    setEditingId(null)
-  }
 
   const fetchActivities = async () => {
     try {
@@ -40,7 +44,7 @@ const Activities = ({ user }) => {
         res.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
       )
     } catch (err) {
-      console.error("Error:", err)
+      console.error(err)
     } finally {
       setLoading(false)
     }
@@ -49,6 +53,37 @@ const Activities = ({ user }) => {
   useEffect(() => {
     fetchActivities()
   }, [])
+
+  const showToast = (text, type = "success") => {
+    setMessage({ text, type })
+    setTimeout(() => setMessage({ text: "", type: "" }), 3000)
+  }
+
+  // دوال البوب أب المخصص
+  const closePopup = () => {
+    setPopup({ isOpen: false, message: "", type: "alert", onConfirm: null })
+  }
+
+  const showConfirm = (message, onConfirm) => {
+    setPopup({ isOpen: true, message, type: "confirm", onConfirm })
+  }
+
+  const resetForm = () => {
+    setFormData({ header: "", headerAr: "", text: "", textAr: "", image: "" })
+    setEditingId(null)
+  }
+
+  const openEditModal = (item) => {
+    setFormData({
+      header: item.header || "",
+      headerAr: item.headerAr || "",
+      text: item.text || "",
+      textAr: item.textAr || "",
+      image: item.image || "",
+    })
+    setEditingId(item._id)
+    setShowModal(true)
+  }
 
   const handleSave = async (e) => {
     e.preventDefault()
@@ -61,43 +96,188 @@ const Activities = ({ user }) => {
             headers: { Authorization: `Bearer ${token}` },
           }
         )
+        showToast(isAr ? "تم التحديث بنجاح ✨" : "Updated successfully ✨")
       } else {
         await axios.post(
           "http://localhost:3000/content",
           { ...formData, page: "activities" },
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
+          { headers: { Authorization: `Bearer ${token}` } }
         )
+        showToast(isAr ? "تمت الإضافة بنجاح ✅" : "Added successfully ✅")
       }
-      await fetchActivities()
+      fetchActivities()
       setShowModal(false)
       resetForm()
     } catch (err) {
-      console.error(err)
+      showToast(isAr ? "حدث خطأ ❌" : "Error ❌", "error")
     }
   }
 
-  const handleDelete = async (actId) => {
-    if (
-      !window.confirm(
-        isAr
-          ? "هل أنت متأكد من حذف هذا النشاط؟"
-          : "Are you sure you want to delete this activity?"
-      )
+  // دالة الحذف مع تأكيد البوب أب
+  const handleDelete = (actId) => {
+    showConfirm(
+      isAr
+        ? "هل أنت متأكد من حذف هذا النشاط؟"
+        : "Are you sure you want to delete this?",
+      async () => {
+        try {
+          await axios.delete(`http://localhost:3000/content/${actId}`, {
+            headers: { Authorization: `Bearer ${token}` },
+          })
+          showToast(
+            isAr ? "تم الحذف بنجاح 🗑️" : "Deleted successfully 🗑️",
+            "error"
+          )
+          setActivities(activities.filter((a) => a._id !== actId))
+          closePopup()
+          if (id) navigate("/activities")
+        } catch (err) {
+          showToast("Error", "error")
+          closePopup()
+        }
+      }
     )
-      return
-    try {
-      await axios.delete(`http://localhost:3000/content/${actId}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      })
-      await fetchActivities()
-    } catch (err) {
-      console.error(err)
-    }
   }
 
-  const currentActivity = activities.find((a) => a._id === id)
+  const renderCustomPopup = () => (
+    <AnimatePresence>
+      {popup.isOpen && (
+        <motion.div
+          className="custom-popup-overlay"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+        >
+          <motion.div
+            className="custom-popup-box"
+            initial={{ scale: 0.9, y: 20 }}
+            animate={{ scale: 1, y: 0 }}
+            exit={{ scale: 0.9, y: 20 }}
+          >
+            <h3>{isAr ? "تنبيه" : "Notice"}</h3>
+            <p>{popup.message}</p>
+            <div className="popup-actions">
+              {popup.type === "confirm" ? (
+                <>
+                  <button
+                    className="popup-btn popup-cancel"
+                    onClick={closePopup}
+                  >
+                    {isAr ? "إلغاء" : "Cancel"}
+                  </button>
+                  <button
+                    className="popup-btn popup-confirm"
+                    onClick={popup.onConfirm}
+                  >
+                    {isAr ? "تأكيد" : "Confirm"}
+                  </button>
+                </>
+              ) : (
+                <button className="popup-btn popup-ok" onClick={closePopup}>
+                  {isAr ? "حسناً" : "OK"}
+                </button>
+              )}
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  )
+
+  const renderAdminModal = () => (
+    <motion.div
+      className="custom-popup-overlay"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+    >
+      <motion.div
+        className="admin-modal-box premium-card"
+        initial={{ scale: 0.9, y: 20 }}
+        animate={{ scale: 1, y: 0 }}
+      >
+        <div className="modal-header-flex">
+          <h3>
+            {editingId
+              ? isAr
+                ? "تعديل النشاط"
+                : "Edit Activity"
+              : isAr
+                ? "نشاط جديد"
+                : "New Activity"}
+          </h3>
+          <div className="lang-switch">
+            <button
+              type="button"
+              onClick={() => setEditLang("en")}
+              className={editLang === "en" ? "active" : ""}
+            >
+              EN
+            </button>
+            <button
+              type="button"
+              onClick={() => setEditLang("ar")}
+              className={editLang === "ar" ? "active" : ""}
+            >
+              AR
+            </button>
+          </div>
+        </div>
+        <form onSubmit={handleSave} className="admin-form">
+          <input
+            className="clean-input"
+            placeholder={editLang === "en" ? "Title" : "العنوان"}
+            value={editLang === "en" ? formData.header : formData.headerAr}
+            onChange={(e) =>
+              setFormData(
+                editLang === "en"
+                  ? { ...formData, header: e.target.value }
+                  : { ...formData, headerAr: e.target.value }
+              )
+            }
+            required
+          />
+          <textarea
+            className="clean-input"
+            rows="5"
+            placeholder={editLang === "en" ? "Description" : "الوصف"}
+            value={editLang === "en" ? formData.text : formData.textAr}
+            onChange={(e) =>
+              setFormData(
+                editLang === "en"
+                  ? { ...formData, text: e.target.value }
+                  : { ...formData, textAr: e.target.value }
+              )
+            }
+            required
+          />
+          <input
+            className="clean-input"
+            placeholder="Image URL"
+            value={formData.image}
+            onChange={(e) =>
+              setFormData({ ...formData, image: e.target.value })
+            }
+          />
+          <div className="modal-footer">
+            <button
+              type="button"
+              className="btn-outline"
+              onClick={() => {
+                setShowModal(false)
+                resetForm()
+              }}
+            >
+              {isAr ? "إلغاء" : "Cancel"}
+            </button>
+            <button type="submit" className="btn-primary">
+              {isAr ? "حفظ" : "Save"}
+            </button>
+          </div>
+        </form>
+      </motion.div>
+    </motion.div>
+  )
 
   if (loading)
     return (
@@ -106,7 +286,8 @@ const Activities = ({ user }) => {
       </div>
     )
 
-  // --- 🌟 DETAIL VIEW 🌟 ---
+  const currentActivity = activities.find((a) => a._id === id)
+
   if (id && currentActivity) {
     return (
       <motion.div
@@ -114,7 +295,36 @@ const Activities = ({ user }) => {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
       >
+        {renderCustomPopup()}
+        <AnimatePresence>
+          {message.text && (
+            <motion.div
+              className={`toast-notification ${message.type}`}
+              initial={{ opacity: 0, y: -50, x: "-50%" }}
+              animate={{ opacity: 1, y: 30, x: "-50%" }}
+              exit={{ opacity: 0, y: -20, x: "-50%" }}
+            >
+              {message.text}
+            </motion.div>
+          )}
+        </AnimatePresence>
         <div className="detail-hero">
+          {user?.admin && (
+            <div className="admin-card-actions detail-pos">
+              <button
+                className="action-circle-btn edit"
+                onClick={() => openEditModal(currentActivity)}
+              >
+                ✏️
+              </button>
+              <button
+                className="action-circle-btn delete"
+                onClick={() => handleDelete(currentActivity._id)}
+              >
+                🗑️
+              </button>
+            </div>
+          )}
           <img
             src={currentActivity.image || "https://placehold.co/1200x600"}
             alt=""
@@ -124,10 +334,9 @@ const Activities = ({ user }) => {
             className="back-nav-btn"
             onClick={() => navigate("/activities")}
           >
-            {isAr ? "← العودة للأنسطة" : "← Back to Activities"}
+            {isAr ? "← العودة للأنشطة" : "← Back to Activities"}
           </button>
         </div>
-
         <div className="detail-content-container premium-card">
           <span className="activity-badge">{isAr ? "نشاط" : "Activity"}</span>
           <h1 className="detail-main-title">
@@ -143,13 +352,27 @@ const Activities = ({ user }) => {
             {isAr ? currentActivity.textAr : currentActivity.text}
           </div>
         </div>
+        <AnimatePresence>{showModal && renderAdminModal()}</AnimatePresence>
       </motion.div>
     )
   }
 
-  // --- 🌟 LIST VIEW 🌟 ---
   return (
     <div className={`activities-hub ${isAr ? "rtl-theme" : ""}`}>
+      {renderCustomPopup()}
+      <AnimatePresence>
+        {message.text && (
+          <motion.div
+            className={`toast-notification ${message.type}`}
+            initial={{ opacity: 0, y: -50, x: "-50%" }}
+            animate={{ opacity: 1, y: 30, x: "-50%" }}
+            exit={{ opacity: 0, y: -20, x: "-50%" }}
+          >
+            {message.text}
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {user?.admin && (
         <div className="admin-add-bar premium-card">
           <div className="admin-status">
@@ -168,104 +391,9 @@ const Activities = ({ user }) => {
         </div>
       )}
 
-      {/* Admin Modal */}
-      <AnimatePresence>
-        {showModal && (
-          <motion.div
-            className="custom-popup-overlay"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-          >
-            <motion.div
-              className="admin-modal-box premium-card"
-              initial={{ scale: 0.9, y: 20 }}
-              animate={{ scale: 1, y: 0 }}
-            >
-              <div className="modal-header-flex">
-                <h3>
-                  {editingId
-                    ? isAr
-                      ? "تعديل النشاط"
-                      : "Edit Activity"
-                    : isAr
-                      ? "نشاط جديد"
-                      : "New Activity"}
-                </h3>
-                <div className="lang-switch">
-                  <button
-                    type="button"
-                    onClick={() => setEditLang("en")}
-                    className={editLang === "en" ? "active" : ""}
-                  >
-                    EN
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setEditLang("ar")}
-                    className={editLang === "ar" ? "active" : ""}
-                  >
-                    AR
-                  </button>
-                </div>
-              </div>
-              <form onSubmit={handleSave} className="admin-form">
-                <input
-                  className="clean-input"
-                  placeholder={editLang === "en" ? "Title" : "العنوان"}
-                  value={
-                    editLang === "en" ? formData.header : formData.headerAr
-                  }
-                  onChange={(e) =>
-                    setFormData(
-                      editLang === "en"
-                        ? { ...formData, header: e.target.value }
-                        : { ...formData, headerAr: e.target.value }
-                    )
-                  }
-                  required
-                />
-                <textarea
-                  className="clean-input"
-                  rows="5"
-                  placeholder={editLang === "en" ? "Description" : "الوصف"}
-                  value={editLang === "en" ? formData.text : formData.textAr}
-                  onChange={(e) =>
-                    setFormData(
-                      editLang === "en"
-                        ? { ...formData, text: e.target.value }
-                        : { ...formData, textAr: e.target.value }
-                    )
-                  }
-                  required
-                />
-                <input
-                  className="clean-input"
-                  placeholder="Image URL"
-                  value={formData.image}
-                  onChange={(e) =>
-                    setFormData({ ...formData, image: e.target.value })
-                  }
-                />
-                <div className="modal-footer">
-                  <button
-                    type="button"
-                    className="btn-outline"
-                    onClick={() => setShowModal(false)}
-                  >
-                    {isAr ? "إلغاء" : "Cancel"}
-                  </button>
-                  <button type="submit" className="btn-primary">
-                    {isAr ? "حفظ" : "Save"}
-                  </button>
-                </div>
-              </form>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      <AnimatePresence>{showModal && renderAdminModal()}</AnimatePresence>
 
-      <section className="news-header">
+      <header className="news-header">
         <div className="news-header-content">
           <h1 className="heading-primary">
             {isAr ? "أنشطتنا" : "Our Activities"}
@@ -276,7 +404,7 @@ const Activities = ({ user }) => {
               : "The latest events and initiatives shaping our community."}
           </p>
         </div>
-      </section>
+      </header>
 
       <section className="activities-grid-section">
         <div className="activities-grid">
@@ -294,11 +422,7 @@ const Activities = ({ user }) => {
                 >
                   <button
                     className="action-circle-btn edit"
-                    onClick={() => {
-                      setFormData(item)
-                      setEditingId(item._id)
-                      setShowModal(true)
-                    }}
+                    onClick={() => openEditModal(item)}
                   >
                     ✏️
                   </button>
@@ -311,14 +435,20 @@ const Activities = ({ user }) => {
                 </div>
               )}
               <div className="activity-img-box">
-                <img src={item.image} alt="" />
+                <img
+                  src={item.image || "https://placehold.co/400x300"}
+                  alt=""
+                />
               </div>
               <div className="activity-info">
                 <h3 className="activity-title">
                   {isAr ? item.headerAr : item.header}
                 </h3>
                 <p className="activity-preview">
-                  {isAr ? item.textAr : item.text}
+                  {isAr
+                    ? item.textAr?.substring(0, 100)
+                    : item.text?.substring(0, 100)}
+                  ...
                 </p>
                 <span className="activity-link-btn">
                   {isAr ? "تفاصيل النشاط" : "View Activity"}

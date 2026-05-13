@@ -1,159 +1,533 @@
-import React from "react"
+import React, { useState, useEffect } from "react"
 import { Link } from "react-router-dom"
 import { useTranslation } from "react-i18next"
+import { motion, AnimatePresence } from "framer-motion"
+import axios from "axios"
 import "./Partners.css"
 
-const Partners = () => {
-  const { t } = useTranslation()
+// --- ANIMATIONS ---
+const staggerContainer = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+    },
+  },
+}
 
-  const strategicPartners = [
-    { link: "https://www.kaaf.bh/ar", img: "kaaf.png", alt: "kaaf_alt" },
-    { link: "https://www.unido.org/", img: "unido.png", alt: "unido_alt" },
+const itemReveal = {
+  hidden: {
+    opacity: 0,
+    scale: 0.9,
+  },
+  show: {
+    opacity: 1,
+    scale: 1,
+    transition: {
+      duration: 0.5,
+      ease: "easeOut",
+    },
+  },
+}
+
+const Partners = ({ user }) => {
+  const { t, i18n } = useTranslation()
+
+  const isAr = i18n.language === "ar"
+
+  const token = localStorage.getItem("token")
+
+  const [partners, setPartners] = useState([])
+  const [loading, setLoading] = useState(true)
+
+  const [showModal, setShowModal] = useState(false)
+
+  const [message, setMessage] = useState({
+    text: "",
+    type: "",
+  })
+
+  const [popup, setPopup] = useState({
+    isOpen: false,
+    message: "",
+    onConfirm: null,
+  })
+
+  // ✅ UPDATED
+  const [formData, setFormData] = useState({
+    image: "",
+    buttonLink: "",
+    partnerType: "strategic",
+  })
+
+  // --- STATIC DATA ---
+  const staticMedia = [
+    {
+      link: "https://360moms.net/ar",
+      img: "moms.png",
+    },
+    {
+      link: "https://www.albiladpress.com/",
+      img: "albilad.png",
+    },
+    {
+      link: "https://alroya.om/",
+      img: "alroyaOm.png",
+    },
+  ]
+
+  const staticStrategic = [
+    {
+      link: "https://www.kaaf.bh/ar",
+      img: "kaaf.png",
+    },
+    {
+      link: "https://www.unido.org/",
+      img: "unido.png",
+    },
     {
       link: "https://thinksmartgulf.com/",
       img: "thinksmart.png",
-      alt: "thinksmart_alt",
     },
     {
-      link: "https://www.instagram.com/alrawibooks/?hl=ar",
+      link: "https://www.instagram.com/alrawibooks/",
       img: "alrawi.png",
-      alt: "alrawi_alt",
     },
     {
-      link: "https://kipinakids.com/kipina-nursery-school-bahrain/",
+      link: "https://kipinakids.com/",
       img: "kipina.png",
-      alt: "kipina_alt",
     },
-    { link: "https://www.fywedo.com/", img: "fywedo.png", alt: "fywedo_alt" },
     {
-      link: "https://www.instagram.com/bahwu/?hl=ar",
-      img: "bahwu.png",
-      alt: "bahwu_alt",
+      link: "https://www.fywedo.com/",
+      img: "fywedo.png",
     },
     {
       link: "https://gtrust.org/",
       img: "goldenTrust.png",
-      alt: "goldenTrust_alt",
     },
   ]
 
+  const staticSponsors = [
+    {
+      link: "https://gfh.com/",
+      img: "gfh.png",
+    },
+    {
+      link: "https://benefit.bh/",
+      img: "benefit.png",
+    },
+  ]
+
+  // --- FETCH ---
+  const fetchData = async () => {
+    try {
+      const res = await axios.get("http://localhost:3000/content/page/partners")
+
+      setPartners(Array.isArray(res.data) ? res.data : [])
+    } catch (err) {
+      console.log(err)
+      setPartners([])
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    fetchData()
+  }, [])
+
+  // --- TOAST ---
+  const showToast = (text, type = "success") => {
+    setMessage({ text, type })
+
+    setTimeout(() => {
+      setMessage({
+        text: "",
+        type: "",
+      })
+    }, 3000)
+  }
+
+  // --- SAVE ---
+  const handleSave = async (e) => {
+    e.preventDefault()
+
+    try {
+      const payload = {
+        image: formData.image,
+        buttonLink: formData.buttonLink,
+        partnerType: formData.partnerType,
+        page: "partners",
+      }
+
+      console.log("SENDING:", payload)
+
+      const res = await axios.post("http://localhost:3000/content", payload, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+
+      console.log("SUCCESS:", res.data)
+
+      showToast(
+        isAr ? "تمت إضافة الشريك بنجاح ✨" : "Partner added successfully ✨"
+      )
+
+      setShowModal(false)
+
+      // ✅ RESET
+      setFormData({
+        image: "",
+        buttonLink: "",
+        partnerType: "strategic",
+      })
+
+      fetchData()
+    } catch (err) {
+      console.log("FULL ERROR:", err)
+
+      console.log("SERVER RESPONSE:", err.response?.data)
+
+      showToast(err.response?.data?.message || "Server Error", "error")
+    }
+  }
+
+  // --- DELETE ---
+  const handleDelete = (id) => {
+    setPopup({
+      isOpen: true,
+      message: isAr ? "هل تريد حذف هذا الشريك؟" : "Delete this partner?",
+      onConfirm: async () => {
+        try {
+          await axios.delete(`http://localhost:3000/content/${id}`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          })
+
+          showToast(isAr ? "تم حذف الشريك" : "Partner deleted", "error")
+
+          setPopup({
+            isOpen: false,
+            message: "",
+            onConfirm: null,
+          })
+
+          fetchData()
+        } catch (err) {
+          console.log(err)
+
+          setPopup({
+            isOpen: false,
+            message: "",
+            onConfirm: null,
+          })
+        }
+      },
+    })
+  }
+
+  // ✅ UPDATED
+  const getDynamic = (type) => {
+    return partners.filter((p) => p.partnerType === type)
+  }
+
+  if (loading) {
+    return <div className="loading-screen">...</div>
+  }
+
   return (
-    <div className="venice-partners-page">
-      {/* Hero Section */}
+    <div className={`venice-partners-page ${isAr ? "rtl-theme" : ""}`}>
+      {/* POPUP */}
+      <AnimatePresence>
+        {popup.isOpen && (
+          <div className="custom-popup-overlay">
+            <motion.div
+              className="custom-popup-box"
+              initial={{ scale: 0.9 }}
+              animate={{ scale: 1 }}
+            >
+              <p>{popup.message}</p>
+
+              <div className="popup-actions">
+                <button
+                  className="popup-btn popup-cancel"
+                  onClick={() =>
+                    setPopup({
+                      isOpen: false,
+                      message: "",
+                      onConfirm: null,
+                    })
+                  }
+                >
+                  {isAr ? "إلغاء" : "Cancel"}
+                </button>
+
+                <button
+                  className="popup-btn popup-confirm"
+                  onClick={popup.onConfirm}
+                >
+                  {isAr ? "تأكيد" : "Confirm"}
+                </button>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
+      {/* TOAST */}
+      <AnimatePresence>
+        {message.text && (
+          <motion.div
+            className={`toast-notification ${message.type}`}
+            initial={{
+              y: -50,
+              x: "-50%",
+            }}
+            animate={{
+              y: 30,
+              x: "-50%",
+            }}
+          >
+            {message.text}
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* ADMIN BAR */}
+      {user?.admin && (
+        <div className="admin-add-bar premium-card">
+          <div className="admin-status">
+            <span className="dot"></span>
+
+            {isAr ? "إدارة الشركاء" : "PARTNERS ADMIN"}
+          </div>
+
+          <button className="btn-primary" onClick={() => setShowModal(true)}>
+            + {isAr ? "إضافة شريك" : "Add Partner"}
+          </button>
+        </div>
+      )}
+
+      {/* HERO */}
       <header className="partners-hero">
         <h1 className="hero-title">{t("partners.heroTitle")}</h1>
-
-        <p className="hero-subtitle">{t("partners.heroSubtitle")}</p>
 
         <div className="gold-accent-line"></div>
       </header>
 
       <div className="partners-content-wrapper">
-        {/* Media Partners */}
+        {/* MEDIA */}
         <section className="venice-section">
-          <div className="section-header">
-            <span className="pre-title">{t("partners.media_preTitle")}</span>
+          <h2 className="section-heading">{t("partners.media_title")}</h2>
 
-            <h2 className="section-heading">{t("partners.media_title")}</h2>
-          </div>
-
-          <div className="luxury-logos-grid">
-            <Link
-              to="https://360moms.net/ar"
-              target="_blank"
-              className="logo-card"
-            >
-              <img
-                src="src/assets/partners/moms.png"
-                alt={t("partners.moms_alt")}
-              />
-            </Link>
-
-            <Link
-              to="https://www.albiladpress.com/"
-              target="_blank"
-              className="logo-card"
-            >
-              <img
-                src="src/assets/partners/albilad.png"
-                alt={t("partners.albilad_alt")}
-              />
-            </Link>
-
-            <Link to="https://alroya.om/" target="_blank" className="logo-card">
-              <img
-                src="src/assets/partners/alroyaOm.png"
-                alt={t("partners.alroya_alt")}
-              />
-            </Link>
-          </div>
-        </section>
-
-        {/* Strategic Partners */}
-        <section className="venice-section alt-bg">
-          <div className="section-header">
-            <span className="pre-title">
-              {t("partners.strategic_preTitle")}
-            </span>
-
-            <h2 className="section-heading">{t("partners.strategic_title")}</h2>
-          </div>
-
-          <div className="luxury-logos-grid">
-            {strategicPartners.map((p, index) => (
-              <Link
-                key={index}
-                to={p.link}
-                target="_blank"
-                className="logo-card"
+          <motion.div
+            className="luxury-logos-grid"
+            variants={staggerContainer}
+            initial="hidden"
+            animate="show"
+          >
+            {staticMedia.map((p, i) => (
+              <motion.div
+                key={i}
+                variants={itemReveal}
+                className="logo-card-wrapper"
               >
-                <img
-                  src={`src/assets/partners/${p.img}`}
-                  alt={t(`partners.${p.alt}`)}
-                />
-              </Link>
+                <Link to={p.link} target="_blank" className="logo-card">
+                  <img src={`/src/assets/partners/${p.img}`} alt="" />
+                </Link>
+              </motion.div>
             ))}
-          </div>
+
+            {getDynamic("media").map((p) => (
+              <motion.div
+                key={p._id}
+                variants={itemReveal}
+                className="logo-card-wrapper"
+              >
+                <Link to={p.buttonLink} target="_blank" className="logo-card">
+                  <img src={p.image} alt="" />
+                </Link>
+
+                {user?.admin && (
+                  <button
+                    className="delete-overlay-btn"
+                    onClick={() => handleDelete(p._id)}
+                  >
+                    ×
+                  </button>
+                )}
+              </motion.div>
+            ))}
+          </motion.div>
         </section>
 
-        {/* Sponsors */}
+        {/* STRATEGIC */}
+        <section className="venice-section alt-bg">
+          <h2 className="section-heading">{t("partners.strategic_title")}</h2>
+
+          <motion.div
+            className="luxury-logos-grid"
+            variants={staggerContainer}
+            initial="hidden"
+            animate="show"
+          >
+            {staticStrategic.map((p, i) => (
+              <motion.div
+                key={i}
+                variants={itemReveal}
+                className="logo-card-wrapper"
+              >
+                <Link to={p.link} target="_blank" className="logo-card">
+                  <img src={`/src/assets/partners/${p.img}`} alt="" />
+                </Link>
+              </motion.div>
+            ))}
+
+            {getDynamic("strategic").map((p) => (
+              <motion.div
+                key={p._id}
+                variants={itemReveal}
+                className="logo-card-wrapper"
+              >
+                <Link to={p.buttonLink} target="_blank" className="logo-card">
+                  <img src={p.image} alt="" />
+                </Link>
+
+                {user?.admin && (
+                  <button
+                    className="delete-overlay-btn"
+                    onClick={() => handleDelete(p._id)}
+                  >
+                    ×
+                  </button>
+                )}
+              </motion.div>
+            ))}
+          </motion.div>
+        </section>
+
+        {/* SPONSORS */}
         <section className="venice-section">
-          <div className="section-header">
-            <span className="pre-title">{t("partners.sponsors_preTitle")}</span>
+          <h2 className="section-heading">{t("partners.sponsors_title")}</h2>
 
-            <h2 className="section-heading">{t("partners.sponsors_title")}</h2>
-          </div>
+          <motion.div
+            className="luxury-logos-grid centered-grid"
+            variants={staggerContainer}
+            initial="hidden"
+            animate="show"
+          >
+            {staticSponsors.map((p, i) => (
+              <motion.div
+                key={i}
+                variants={itemReveal}
+                className="logo-card-wrapper"
+              >
+                <Link to={p.link} target="_blank" className="logo-card">
+                  <img src={`/src/assets/partners/${p.img}`} alt="" />
+                </Link>
+              </motion.div>
+            ))}
 
-          <div className="luxury-logos-grid centered-grid">
-            <Link to="https://gfh.com/" target="_blank" className="logo-card">
-              <img
-                src="src/assets/partners/gfh.png"
-                alt={t("partners.gfh_alt")}
-              />
-            </Link>
+            {getDynamic("sponsor").map((p) => (
+              <motion.div
+                key={p._id}
+                variants={itemReveal}
+                className="logo-card-wrapper"
+              >
+                <Link to={p.buttonLink} target="_blank" className="logo-card">
+                  <img src={p.image} alt="" />
+                </Link>
 
-            <Link
-              to="https://benefit.bh/"
-              target="_blank"
-              className="logo-card"
-            >
-              <img
-                src="src/assets/partners/benefit.png"
-                alt={t("partners.benefit_alt")}
-              />
-            </Link>
-          </div>
+                {user?.admin && (
+                  <button
+                    className="delete-overlay-btn"
+                    onClick={() => handleDelete(p._id)}
+                  >
+                    ×
+                  </button>
+                )}
+              </motion.div>
+            ))}
+          </motion.div>
         </section>
-
-        {/* Footer */}
-        <footer className="partners-footer">
-          <div className="footer-card">
-            <p className="footer-statement">{t("partners.footerText")}</p>
-
-            <div className="minimal-line"></div>
-          </div>
-        </footer>
       </div>
+
+      {/* MODAL */}
+      <AnimatePresence>
+        {showModal && (
+          <div className="custom-popup-overlay">
+            <motion.div
+              className="admin-modal-box small-modal"
+              initial={{ y: 50 }}
+              animate={{ y: 0 }}
+            >
+              <h3>{isAr ? "إضافة شريك جديد" : "Add New Partner"}</h3>
+
+              <form onSubmit={handleSave} className="admin-form">
+                <input
+                  className="clean-input"
+                  placeholder="Image URL"
+                  value={formData.image}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      image: e.target.value,
+                    })
+                  }
+                  required
+                />
+
+                <input
+                  className="clean-input"
+                  placeholder="Website Link"
+                  value={formData.buttonLink}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      buttonLink: e.target.value,
+                    })
+                  }
+                />
+
+                {/* ✅ UPDATED */}
+                <select
+                  className="clean-input"
+                  value={formData.partnerType}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      partnerType: e.target.value,
+                    })
+                  }
+                >
+                  <option value="strategic">Strategic Partner</option>
+
+                  <option value="media">Media Partner</option>
+
+                  <option value="sponsor">Sponsor</option>
+                </select>
+
+                <div className="modal-footer">
+                  <button
+                    type="button"
+                    className="btn-outline"
+                    onClick={() => setShowModal(false)}
+                  >
+                    {isAr ? "إلغاء" : "Cancel"}
+                  </button>
+
+                  <button type="submit" className="btn-primary">
+                    {isAr ? "حفظ" : "Save"}
+                  </button>
+                </div>
+              </form>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   )
 }
