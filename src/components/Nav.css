@@ -22,7 +22,7 @@ body,
 .top-bar {
   width: 100%;
   height: 28px;
-  background: #1e0f2e;
+  background:#3F255D;
   display: flex;
   justify-content: flex-end;
   align-items: center;
@@ -86,8 +86,8 @@ body,
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: #1e0f2e;
-  border: 2px solid #1e0f2e;
+  color:#3F255D;
+  border: 2px solid#3F255D;
   background: transparent;
   padding: 6px 14px;
   border-radius: 3px;
@@ -97,9 +97,9 @@ body,
 
 .lang-switch button:hover,
 .lang-switch button.active {
-  background: #1e0f2e;
+  background:#3F255D;
   color: #ffffff;
-  border-color: #1e0f2e;
+  border-color:#3F255D;
 }
 
 .logo-center {
@@ -118,6 +118,7 @@ body,
 .logo-main:hover {
   opacity: 0.75;
   transition: opacity 0.2s ease;
+
 }
 
 .menu-btn {
@@ -134,7 +135,7 @@ body,
 .menu-btn span {
   display: block;
   height: 2px;
-  background: #1e0f2e;
+  background: #3F255D;
   transition: all 0.3s ease;
 }
 
@@ -154,7 +155,7 @@ body,
   justify-content: center;
   align-items: center;
   width: 100vw;
- 
+
   background: #ffffff;
   border-top: 1px solid rgba(0,0,0,0.05);
   padding: 12px 10px;
@@ -163,11 +164,11 @@ body,
 
 .nav-links.desktop a {
   font-family: "DM Sans", sans-serif;
-  font-size: 13.5px;
-  font-weight: 700;
+  font-size: 15px;
+  font-weight: 800;
   letter-spacing: 0.05em;
   text-transform: uppercase;
-  color: #d16d20;
+  color: #E66F00;
   text-decoration: none;
   padding: 12px 22px;
   border-bottom: 2px solid transparent;
@@ -176,8 +177,8 @@ body,
 }
 
 .nav-links.desktop a:hover {
-  color: #1e0f2e;
-  border-bottom-color: #1e0f2e;
+  color: #3F255D;
+  border-bottom-color: #3F255D;
 }
 
 .nav-links.desktop .logout-btn {
@@ -224,7 +225,7 @@ body,
   font-weight: 700;
   letter-spacing: 0.05em;
   text-transform: uppercase;
-  color: #1e0f2e;
+  color: #3F255D;
   text-decoration: none;
   padding: 18px 0;
   border-bottom: 1px solid rgba(30, 15, 46, 0.08);
@@ -240,7 +241,7 @@ body,
   padding: 20px 0;
   border-top: 2px solid rgba(30, 15, 46, 0.1);
   font-family: "DM Sans", sans-serif;
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 800;
   color: #d9534f;
   background: none;
