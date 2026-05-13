@@ -222,10 +222,10 @@ const Home = ({ user }) => {
             transition={{ duration: 0.8 }}
           >
             <h1>
-              {t("home.title_unlock")} <span>{t("home.raedat")}</span>
+              {t("home.title_unlock")}   <span>{t("home.raedat")}</span>
             </h1>
 
-            <p className="hero-desc">{t("home.desc_initiative")}</p>
+            <p className="hero-desc">{t("home.desc_initiative")}</p><br /> <br />
 
             <div className="hero-buttons">
               <Link to="/community" className="join-btn">
@@ -238,7 +238,7 @@ const Home = ({ user }) => {
               >
                 {isAr ? "تعرفي علينا" : "Learn More"}
               </button>
-            </div>
+            </div><br />
 
             <div className="store-links">
               <a
@@ -276,7 +276,7 @@ const Home = ({ user }) => {
             <div className="phone-frame">
               <img
                 className="app-img"
-                src="https://www.raedat.online/MediaManager/Media/home/homescreen_new%20screenshot.png"
+                src="/public/images/raedat_mokupApp.png"
                 alt="app"
               />
             </div>

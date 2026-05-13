@@ -1,5 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Cormorant+Garamond:wght@300;400;500&family=Montserrat:wght@300;400;600;700&display=swap");
 
+@import url("https://fonts.googleapis.com/css2?family=Alexandria:wght@100..900&family=Almarai:wght@300;400;700;800&display=swap");
+
 .home-page {
   background-color: #fdfaf9;
   min-height: 100vh;
@@ -210,7 +212,7 @@
 
 .hero-section {
   background-color: #2a1040;
-  padding: 80px 8% 90px;
+  padding: 60px 8% 90px;
   position: relative;
   overflow: hidden;
   min-height: 600px;
@@ -242,32 +244,46 @@
   width: 100%;
 }
 
-.hero-content {
+div.hero-content {
   flex: 1;
-  max-width: 560px;
+  /* max-width: 560px; */
+  padding: 2%;
 }
 
-.hero-content h1 {
+div.hero-content h1 {
   font-family: "Playfair Display", serif;
-  font-size: 3.4rem;
+  font-size: 3rem;
   color: #f0eaf8;
   line-height: 1.12;
   margin: 0 0 22px;
-  letter-spacing: 0.5px;
 }
 
 .hero-content h1 span {
-  color: #c4aff0;
-  font-style: italic;
+  color: #d68310;
+  /* font-style: italic; */
+  font-family: "Almarai", sans-serif;
+  font-weight: 300;
+  font-style: normal;
+  font-weight: bold;
+
+  color: #d68310;
+  background: linear-gradient(to right, #d68310 20%, #df9bdf 50%, #d68310 80%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
-.hero-desc {
-  font-family: "Montserrat", sans-serif;
+p.hero-desc {
+  font-family: "Almarai", sans-serif;
   font-size: 0.88rem;
   line-height: 1.9;
   color: #b8a8d4;
-  margin-bottom: 36px;
   max-width: 440px;
+  text-align: justify;
+  text-justify: inter-word;
+  margin-top: 24px;
+  margin-bottom: 40px;
+  padding: 0 10px;
 }
 
 .hero-buttons {
@@ -279,48 +295,65 @@
 
 .join-btn {
   display: inline-block;
-  padding: 14px 32px;
-  background-color: #8e7dbe;
+  padding: 16px 36px;
+  background-color: #3d1a5e;
+  border-radius: 50px;
   color: #fff;
   text-decoration: none;
-  font-family: "Montserrat", sans-serif;
-  font-size: 0.72rem;
-  letter-spacing: 2.5px;
+  font-family: inherit;
+  font-size: 1.2rem;
+  letter-spacing: 1.5px;
   text-transform: uppercase;
   font-weight: 700;
-  transition:
-    background-color 0.3s ease,
-    transform 0.2s ease;
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 15px rgba(61, 26, 94, 0.3);
+  border: 2px solid transparent;
 }
 
-.join-btn:hover {
-  background-color: #c4aff0;
-  color: #2a1040;
-  transform: translateY(-2px);
-}
 
-.read-more-btn {
-  display: inline-block;
-  padding: 14px 28px;
-  background-color: transparent;
-  color: #d68310; /* changed color */
-  border: 1px solid #d68310;
-
-  font-family: "Montserrat", sans-serif;
-  font-size: 0.72rem;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  font-weight: 600;
-  cursor: pointer;
-  text-decoration: none;
-  transition: 0.3s ease;
-}
-
-.read-more-btn:hover {
-  background-color: rgba(214, 131, 16, 0.12);
-  border-color: #d68310;
+.join-btn:hover , button.read-more-btn:hover{
+  background-color: #e28811;
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(226, 136, 17, 0.4);
   color: #fff;
 }
+
+.join-btn:active {
+  transform: translateY(-1px);
+}
+
+
+button.read-more-btn,
+a.read-more-btn {
+  display: inline-block;
+  padding: 16px 36px;
+
+  border-radius: 50px;
+  color: #e28811;
+  text-decoration: none;
+
+  font-family: "Montserrat", sans-serif;
+  font-size: 1.2rem;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  font-weight: 700;
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+
+  border: 2px solid transparent;
+}
+
+/* .read-more-btn:hover {
+  background-color: #e28811;
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(226, 136, 17, 0.4);
+  color: #2a1040;
+} */
 
 .hello-text .read-more-btn,
 .about-text-content .read-more-btn {
@@ -333,29 +366,36 @@
   background-color: #4b2c5e;
   color: #fff;
 }
-
+/* app installing links style */
 .store-links {
   display: flex;
-  gap: 14px;
+  gap: 20px;
   align-items: center;
   flex-wrap: wrap;
 }
 
 .store-img,
 .google-img {
-  height: 40px;
+  height: 45px;
   object-fit: contain;
-  /* filter: brightness(0) invert(1) opacity(0.75);
-  transition:
-    filter 0.4s ease,
-    transform 0.3s ease; */
-  border-radius: 10%;
+  background-color: #000;
+  border-radius: 8px;
+  padding: 2px;
+
+  border: 1px solid rgba(226, 136, 17, 0.3);
+  transition: all 0.4s ease;
+
+  box-shadow: 0 0 10px rgba(226, 136, 17, 0.1);
 }
 
 .store-img:hover,
 .google-img:hover {
-  opacity: 0.85;
-  transform: translateY(-2px);
+  border-color: #e28811;
+
+  transform: scale(1.05) translateY(-3px);
+  box-shadow: 0 5px 20px rgba(226, 136, 17, 0.5);
+
+  filter: brightness(1.1);
 }
 
 /* Hero image / phone frame */
@@ -377,7 +417,7 @@
 
 .app-img {
   display: block;
-  width: 260px;
+  width: fit-content;
   height: 500px;
   object-fit: cover;
 }
@@ -402,7 +442,7 @@
 }
 
 .hello-text h2 {
-  font-family: "Playfair Display", serif;
+  font-family: "Almarai", sans-serif;
   font-size: 2.5rem;
   color: #4b2c5e;
   line-height: 1.2;
