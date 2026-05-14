@@ -38,25 +38,39 @@ const ContactUs = () => {
         <div className="contact-hero-inner">
           <h1>{t("contact.company")}</h1>
 
-          <div className="contact-hero-meta">
-            <div className="contact-meta-item">
-              <div className="contact-meta-icon">
-                <i className="fas fa-map-marker-alt"></i>
-              </div>
-              <div className="contact-meta-text">
-                <span className="contact-meta-label">
-                  {t("contact.address_label") || "Address"}
-                </span>
-                <span className="contact-meta-value">
-                  {t("contact.address")}
-                </span>
-              </div>
-            </div>
+
+<div className="contact-hero-meta">
+  <div className="contact-meta-item">
+    <div className="contact-meta-icon">
+
+      <img
+        src="/public/images/location-pin.png"
+        alt="Map Marker"
+        style={{ width: '24px', height: '24px', objectFit: 'contain' }}
+      />
+    </div>
+    <div className="contact-meta-text">
+      <span className="contact-meta-label">
+        {t("contact.address_label") || "Address"}
+      </span>
+      <span className="contact-meta-value">
+        {t("contact.address")}
+      </span>
+    </div>
+  </div>
+
 
             <div className="contact-meta-item">
               <div className="contact-meta-icon">
-                <i className="fas fa-envelope"></i>
+
+                  <img
+        src="/public/images/email.png"
+        alt="Map Marker"
+        style={{ width: '24px', height: '24px', objectFit: 'contain' }}
+      />
+
               </div>
+
               <div className="contact-meta-text">
                 <span className="contact-meta-label">
                   {t("contact.email_label") || "Email"}
