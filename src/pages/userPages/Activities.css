@@ -19,7 +19,7 @@
 
 .heading-primary {
   font-size: 2.8rem;
-  color:  #3F255D;
+  color: #3f255d;
   margin-bottom: 15px;
   font-weight: 800;
 }
@@ -72,7 +72,9 @@
   overflow: hidden;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
   cursor: pointer;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
   display: flex;
   flex-direction: column;
 }
@@ -98,6 +100,182 @@
 
 .activity-card-new:hover .activity-card-img img {
   transform: scale(1.05);
+}
+
+/* =========================================
+   CINEMATIC ACTIVITY DETAIL PAGE
+========================================= */
+
+.activity-detail-master {
+  background-color: #fdfaf9; /* Off-white premium background */
+  min-height: 100vh;
+  padding-bottom: 100px;
+}
+
+/* --- 1. Hero Section --- */
+.detail-cinematic-hero {
+  position: relative;
+  width: 100%;
+  height: 60vh;
+  min-height: 450px;
+  background-color: #1a1a2e;
+  overflow: hidden;
+}
+
+.detail-hero-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.hero-overlay-gradient {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  /* Darkens the top for buttons and the bottom for the overlapping card */
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.6) 0%,
+    rgba(0, 0, 0, 0.1) 40%,
+    rgba(0, 0, 0, 0.7) 100%
+  );
+  z-index: 1;
+}
+
+/* --- Navigation & Admin Buttons inside Hero --- */
+.back-glass-btn {
+  position: absolute;
+  top: 40px;
+  left: 5%;
+  z-index: 10;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+  padding: 12px 24px;
+  border-radius: 50px;
+  font-family: "Montserrat", sans-serif;
+  font-weight: 700;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.back-glass-btn:hover {
+  background: #ff5e00;
+  border-color: #ff5e00;
+  transform: translateY(-2px);
+}
+
+.admin-floating-actions {
+  position: absolute;
+  top: 40px;
+  right: 5%;
+  z-index: 10;
+  display: flex;
+  gap: 15px;
+}
+
+/* --- 2. Article Container (The Document) --- */
+.detail-article-container {
+  position: relative;
+  z-index: 5;
+  max-width: 900px;
+  margin: -100px auto 0; /* Pulls the container UP over the image */
+  background: #ffffff;
+  padding: 60px 80px;
+  border-radius: 30px;
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.08);
+}
+
+.detail-meta-header {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 30px;
+  flex-wrap: wrap;
+}
+
+.premium-badge {
+  background: #ff5e00;
+  color: #ffffff;
+  padding: 8px 20px;
+  border-radius: 50px;
+  font-family: "Montserrat", sans-serif;
+  font-size: 0.85rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.detail-date-pill {
+  background: rgba(77, 37, 164, 0.08);
+  color: #4d25a4;
+  padding: 8px 20px;
+  border-radius: 50px;
+  font-family: "Montserrat", sans-serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.detail-display-title {
+  font-family: "Playfair Display", serif;
+  font-size: clamp(2.5rem, 5vw, 3.5rem);
+  color: #1a1a2e;
+  line-height: 1.15;
+  margin-bottom: 40px;
+  letter-spacing: -1px;
+}
+
+.detail-prose {
+  font-family: "Montserrat", sans-serif;
+  font-size: 1.15rem;
+  line-height: 2.2;
+  color: #4a4a4a;
+  white-space: pre-wrap; /* This ensures line breaks from your textarea are rendered! */
+}
+
+/* --- RTL (Arabic) Adjustments --- */
+.rtl-theme .back-glass-btn {
+  left: auto;
+  right: 5%;
+}
+
+.rtl-theme .admin-floating-actions {
+  right: auto;
+  left: 5%;
+}
+
+.rtl-theme .detail-display-title,
+.rtl-theme .detail-prose {
+  font-family: "Tajawal", "Cairo", sans-serif;
+}
+
+/* --- Mobile Responsiveness --- */
+@media (max-width: 768px) {
+  .detail-cinematic-hero {
+    height: 50vh;
+  }
+
+  .detail-article-container {
+    margin: -60px 20px 0;
+    padding: 40px 30px;
+    border-radius: 24px;
+  }
+
+  .back-glass-btn {
+    top: 20px;
+    padding: 10px 20px;
+    font-size: 0.8rem;
+  }
+
+  .admin-floating-actions {
+    top: 20px;
+  }
 }
 
 /* Admin Actions Overlay */
@@ -128,7 +306,7 @@
 
 .activity-card-date {
   font-size: 0.85rem;
-  color:  #3F255D;
+  color: #3f255d;
   font-weight: 600;
   margin-bottom: 10px;
 }
@@ -178,8 +356,12 @@
   font-weight: 600;
 }
 
-.toast-notification.success { border-bottom: 4px solid #34c759; }
-.toast-notification.error { border-bottom: 4px solid #ff3b30; }
+.toast-notification.success {
+  border-bottom: 4px solid #34c759;
+}
+.toast-notification.error {
+  border-bottom: 4px solid #ff3b30;
+}
 
 /* Responsive */
 @media (max-width: 768px) {
