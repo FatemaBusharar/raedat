@@ -18,7 +18,7 @@ import SignIn from "./pages/authPages/SignIn"
 import UpdatePassword from "./pages/authPages/UpdatePassword"
 import AdminMessages from "./pages/adminPages/AdminMessages"
 import AdminForm from "./pages/adminPages/AdminForm"
-import EditContent from "./pages/adminPages/EditContent"
+import EditContent from "./pages/adminpages/EditContent"
 
 // COMPONENTS
 import Nav from "./components/Nav"
@@ -79,6 +79,8 @@ const App = () => {
           <Route path="/about" element={<About user={user} />} />
 
           <Route path="/activities" element={<Activities user={user} />} />
+
+          <Route path="/activities/:id" element={<Activities user={user} />} />
 
           <Route path="/community" element={<Community user={user} />} />
 
