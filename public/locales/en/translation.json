@@ -77,7 +77,7 @@
     "failed": "Failed to update password."
   },
   "adminMessages": {
-    "title": "Messages Management",
+    "title": "Contact Messages",
     "read": "Read",
     "name": "Name",
     "email": "Email",
@@ -87,90 +87,61 @@
     "action": "Action",
     "delete": "Delete",
     "empty": "No messages found",
-    "confirmDeleteTitle": "Are you sure?",
-    "confirmDeleteText": "You won't be able to revert this!",
-    "yesDelete": "Yes, delete it",
-    "cancel": "Cancel",
-    "deletedSuccess": "Message deleted successfully",
-    "markedRead": "Marked as read",
-    "markedUnread": "Marked as unread",
-    "errorTitle": "Error!",
-    "errorFetch": "Failed to fetch data from server"
-  },
-  "common": {
-    "loading": "Loading"
+    "confirmDelete": "Are you sure you want to delete this message?"
   },
   "about": {
+    "loading": "Loading...",
     "hero": {
       "label": "Say Hello to ra'edat",
       "title": "Inspiring Social Progress",
       "description": "ra'edat is a pioneering platform dedicated to unleashing the transformative potential of Arab women within the orange economy."
     },
-
     "vision": {
       "title": "Vision",
-      "description": "To ignite the creative potential of Arab women in the orange economy, fostering a vibrant community of innovative thinkers and changemakers who inspire social progress and economic development."
+      "desc": "To ignite the creative potential of Arab women in the orange economy, fostering a vibrant community of innovative thinkers and changemakers who inspire social progress and economic development."
     },
-
     "mission": {
       "title": "Mission",
-      "description": "To empower Arab women by providing tools, mentorship, and opportunities to thrive in the orange economy."
+      "desc": "To empower Arab women by providing tools, mentorship, and opportunities to thrive in the orange economy."
     },
-
-    "orangeEconomy": {
+    "orange_economy": {
       "label": "A Creative Revolution",
       "title": "The Orange Economy",
-      "paragraph1": "The Orange Economy encompasses creative industries that blend culture, knowledge, and innovation to drive economic growth. This vibrant sector includes art, music, design, fashion, film, literature, technology, and digital media.",
-      "paragraph2": "This dynamic economy fosters collaboration among entrepreneurs, artists, and innovators, paving the way for new business models and sustainable development."
+      "p1": "The Orange Economy encompasses creative industries that blend culture, knowledge, and innovation to drive economic growth. This vibrant sector includes art, music, design, fashion, film, literature, technology, and digital media.",
+      "p2": "This dynamic economy fosters collaboration among entrepreneurs, artists, and innovators, paving the way for new business models and sustainable development."
     },
-
-    "quote": {
-      "text": "\"ra'edat is not just a tool; it's a catalyst for change.\""
-    },
-
+    "quote": "ra'edat is not just a tool; it’s a catalyst for change.",
     "uniqueness": {
       "label": "Why We Stand Out",
       "title": "Our Uniqueness",
-      "paragraph1": "ra'edat stands out by creating an inclusive platform specifically designed for Arab women. Our commitment to nurturing their talents within the orange economy empowers them to overcome barriers and maximize their creative potential.",
-      "paragraph2": "With pioneering features like AI-powered matchmaking and a dedicated marketplace, ra'edat transforms not just individual lives but entire communities."
+      "p1": "ra'edat stands out by creating an inclusive platform specifically designed for Arab women. Our commitment to nurturing their talents within the orange economy empowers them to overcome barriers and maximize their creative potential.",
+      "p2": "With pioneering features like AI-powered matchmaking and a dedicated marketplace, ra'edat transforms not just individual lives but entire communities."
     },
-
-    "features": [
-      "Create posts, articles, polls, events, and courses.",
-      "Build community groups and sub-groups for organisations.",
-      "Support for creating a branded e-marketplace.",
-      "Native app available for Android and iOS devices.",
-      "Customisable experiences for community members.",
-      "Enjoyable and straightforward technological experience.",
-      "Enhance gamification features to boost engagement."
-    ],
-
+    "features": {
+      "posts": "Create posts, articles, polls, events, and courses.",
+      "groups": "Build community groups and sub-groups for organisations.",
+      "marketplace": "Support for creating a branded e-marketplace.",
+      "mobile": "Native app available for Android and iOS devices.",
+      "custom": "Customisable experiences for community members.",
+      "tech": "Enjoyable and straightforward technological experience.",
+      "gamification": "Enhance gamification features to boost engagement."
+    },
     "team": {
       "label": "Our Team",
       "title": "Meet Our Experts",
-      "members": [
-        {
-          "name": "Maryam Buzaboon",
-          "role": "Business Development Manager"
-        },
-        {
-          "name": "Oday Adel",
-          "role": "Marketing Executive"
-        },
-        {
-          "name": "Fayeza Ahmed",
-          "role": "Graphic Designer / Content Creator"
-        }
-      ]
-    },
-
-    "loading": "Loading..."
+      "roles": {
+        "bizDev": "Business Development Manager",
+        "marketing": "Marketing Executive",
+        "creative": "Graphic Designer / Content Creator"
+      }
+    }
   },
+
   "home": {
     "title_unlock": "Unlock Your Potential With",
     "raedat": "Ra'edat",
-    "Join": "Join Ra'edat",
-    "title_hello": "Say Hello to Ra'edat",
+    "Join": "Join Ra’edat",
+    "title_hello": "Say Hello to Ra’edat",
     "desc_initiative": "Ra'edat is an innovative initiative dedicated to fostering collaborations among members and organisations, empowering them to achieve shared goals and build meaningful partnerships within the creative economy, more specifically, the orange economy.",
     "btn_read_more": "Read More",
     "title_community": "A Creative Community",
@@ -182,78 +153,84 @@
       "title": "A Creative Community",
       "description": "The platform will harness women's potential by integrating the orange economy into our pillars, empowering Arab women while fostering economic growth."
     },
-
-    "platform": {
+    "pillars": {
       "badge": "Platform Pillars",
-      "title1": "What We",
-      "title2": "Offer",
-
-      "items": [
-        "Live Streaming",
-        "Events Management",
-        "Online Courses",
-        "Souq ra'edat",
-        "Community Support"
-      ]
+      "title": "What We",
+      "titleSpan": "Offer",
+      "items": {
+        "liveStreaming": "Live Streaming",
+        "eventsManagement": "Events Management",
+        "onlineCourses": "Online Courses",
+        "souqRaedat": "Souq ra'edat",
+        "communitySupport": "Community Support"
+      }
     },
-
-    "individuals": {
+    "values": {
       "badge": "Our Values",
-      "title1": "For",
-      "title2": "Individuals",
-
-      "cards": [
-        {
-          "title": "Personal Growth",
-          "description": "Access to tailored educational resources, workshops, and expert mentorship enhances skills critical for success."
-        },
-        {
-          "title": "Networking Opportunities",
-          "description": "Connect with like-minded women and industry leaders to share experiences and collaborate on projects."
-        },
-        {
-          "title": "Creative Expression",
-          "description": "Engage in a community that celebrates unique talents through various initiatives, including the marketplace."
-        }
-      ]
+      "title": "For",
+      "titleSpan": "Individuals",
+      "growth": {
+        "title": "Personal Growth",
+        "desc": "Access to tailored educational resources, workshops, and expert mentorship enhances skills critical for success."
+      },
+      "networking": {
+        "title": "Networking Opportunities",
+        "desc": "Connect with like-minded women and industry leaders to share experiences and collaborate on projects."
+      },
+      "expression": {
+        "title": "Creative Expression",
+        "desc": "Engage in a community that celebrates unique talents through various initiatives, including the marketplace."
+      }
     },
-    "communities": {
+    "impact": {
       "badge": "Community Impact",
-      "title1": "For",
-      "title2": "Communities",
-
-      "cards": [
-        {
-          "title": "Empowerment",
-          "description": "Investing in women's entrepreneurship strengthens local economies and fosters innovation across the creative sector."
-        },
-        {
-          "title": "Cultural Heritage",
-          "description": "Promotes cultural pride and sustainable growth by highlighting women's achievements and contributions."
-        },
-        {
-          "title": "Collective Growth",
-          "description": "Workshops and panel discussions cultivate a collaborative spirit and knowledge exchange among members."
-        }
-      ]
+      "title": "For",
+      "titleSpan": "Communities",
+      "empowerment": {
+        "title": "Empowerment",
+        "desc": "Investing in women's entrepreneurship strengthens local economies and fosters innovation across the creative sector."
+      },
+      "heritage": {
+        "title": "Cultural Heritage",
+        "desc": "Promotes cultural pride and sustainable growth by highlighting women's achievements and contributions."
+      },
+      "collective": {
+        "title": "Collective Growth",
+        "desc": "Workshops and panel discussions cultivate a collaborative spirit and knowledge exchange among members."
+      }
     },
-
     "network": {
       "badge": "Our Network",
-      "title1": "Who We",
-      "title2": "Cater To",
-
-      "users": [
-        "Businesses",
-        "Educators",
-        "Coaches/Mentors",
-        "Creators",
-        "Startups",
-        "Entrepreneurs",
-        "Solopreneurs",
-        "Non-profit Organizations"
-      ]
+      "title": "Who We",
+      "titleSpan": "Cater To",
+      "tags": {
+        "businesses": "Businesses",
+        "educators": "Educators",
+        "mentors": "Coaches/Mentors",
+        "creators": "Creators",
+        "startups": "Startups",
+        "entrepreneurs": "Entrepreneurs",
+        "solopreneurs": "Solopreneurs",
+        "nonProfit": "Non-profit Organizations"
+      }
     }
+  },
+  "contact": {
+    "company": "Raedat W.L.L",
+    "address": "Budaiya Building, Road 711, Block 207, Building 453, Flat 22, P.O. Box 3294, Muharraq, Bahrain",
+    "email": "support@raedat.online",
+    "address_label": "Address",
+    "email_label": "Email",
+    "reach_out": "Reach Out to Us",
+    "form_title": "We’d love to hear from you",
+    "form_desc": "Fill out the form and we’ll get back to you as soon as possible.",
+    "full_name": "Enter your full name",
+    "email_placeholder": "Enter your email",
+    "phone": "Phone Number",
+    "subject": "Subject",
+    "message": "Enter your message",
+    "submit": "Submit",
+    "success": "Your message has been sent successfully, we will contact you soon."
   },
   "partners": {
     "heroTitle": "Our Partners",
@@ -271,36 +248,19 @@
     "footerText": "Building a creative future together",
 
     "moms_alt": "360 Moms",
-    "albilad_alt": "Al Bilad Press",
-    "alroya_alt": "Al Roya",
+    "albilad_alt": "Albilad Newspaper",
+    "alroya_alt": "Alroya",
 
     "kaaf_alt": "Kaaf",
     "unido_alt": "UNIDO",
-    "thinksmart_alt": "Think Smart",
-    "alrawi_alt": "Al Rawi Books",
-    "kipina_alt": "Kipina Kids",
+    "thinksmart_alt": "ThinkSmart",
+    "alrawi_alt": "Alrawi",
+    "kipina_alt": "Kipina",
     "fywedo_alt": "Fywedo",
     "bahwu_alt": "Bahwu",
     "goldenTrust_alt": "Golden Trust",
 
     "gfh_alt": "GFH",
     "benefit_alt": "Benefit"
-  },
-  "contact": {
-    "company": "Raedat W.L.L Company",
-    "address": "Al Badi' Building, Road 711, Block 207, Building 453, Apartment 22, P.O. Box 3294, Muharraq, Bahrain",
-    "email": "Email: support@raedat.online",
-    "address_label": "Address",
-    "email_label": "Email",
-    "reach_out": "Get in touch with us",
-    "form_title": "We're happy to hear from you",
-    "form_desc": "Fill out the form and we'll get back to you as soon as possible.",
-    "full_name": "Enter your full name",
-    "email_placeholder": "Enter your email address",
-    "phone": "Phone number",
-    "subject": "Subject",
-    "message": "Enter your message",
-    "submit": "Send",
-    "success": "Your message has been sent successfully. We will contact you soon."
   }
 }
